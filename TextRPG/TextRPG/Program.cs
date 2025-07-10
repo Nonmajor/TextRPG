@@ -77,7 +77,11 @@ namespace TextRPG
             int totalAtk = player.BaseAtk; //기본 공격력
             int totalDef = player.BaseDef; //기본 방어력
 
-            for (int i = 0; i < equippedItems.Count; i++) //equippedItems의 수만큼 반복
+            for (int i = 0; i < equippedItems.Count; i++)
+            //equippedItems의 수만큼 반복
+            // public int Count => count; 코드를 통해 .Count로 equippedItems의 ItemList 컬렉션 내부의 count 변수에 접근이 가능하다
+            // 접근을 하면 count 변수의 현재 값이 반환된다.
+
             {
                 totalAtk += equippedItems[i].Atk; //totalAtk에 합산
                 totalDef += equippedItems[i].Def; //totalDef에 합산
@@ -90,7 +94,7 @@ namespace TextRPG
             Console.WriteLine($"공격력 : {totalAtk}");
             Console.WriteLine($"방어력 : {totalDef}");
             Console.WriteLine($"체  력 : {player.Hp}");//문자열 보간 활용. player의 Hp 속성 출력
-            Console.WriteLine($"Gold : {player.Gold} G\n");//문자열 보간 활용. player의 GOld 속성 출력 + 한 줄 비우기
+            Console.WriteLine($"Gold : {player.Gold} G\n");//문자열 보간 활용. player의 Gold 속성 출력 + 한 줄 비우기
             Console.WriteLine("0. 나가기\n");
             Console.Write("원하시는 행동을 입력해주세요.\n>> ");
 
@@ -116,7 +120,9 @@ namespace TextRPG
                     for (int i = 0; i < inventory.Count; i++) //inventory 변수의 수보다 작은만큼 반복
                     {
                         Item item = inventory[i];
-                        // Item 타입의 변수 item에 inventory 컬렉션의 i 번째 요소를 가져옴
+                        // inventory[i]; : inventory 변수에 저장된 ItemList 객체에 정의된 인덱서 호출 -> public Item this[int index] => items[index]; 코드 작동 -> index 매개변수에 i 값 전달
+                        // 전달받은 i 값으로 private Item[] items 배열에 접근하여 i 번째 위치에 저장되어있는 값을 Inventory[i] 로 반환함
+                        // Item 타입의 변수 item에 inventory 컬렉션의 i 번째 요소를 할당함
                         // 지역 변수이므로 ShowInventory 함수 내에서만 유효함
 
 
@@ -398,13 +404,20 @@ namespace TextRPG
         public int Count => count;
         // 외부에서 접근 가능한 정수형 변수 Count (대소문자 구분)를 선언한다
         // 람다식 => 를 통해 외부에서 접근 불가한 private int count의 값을 읽어올 수 있도록 한다
-        // 현재 저장된 아이템의 개수를 알려주는 역할을 함
+        // .Count를 통해 호출한 변수의 count 값을 반환함 = 현재 저장된 아이템의 개수를 알려주는 역할을 함
 
         public Item this[int index] => items[index];
         // ItemList 객체를 배열처럼 접근하기 위해 인덱서를 사용함
         // public으로 외부에서 접근 가능하게 하게 하고 Item 타입의 객체를 반환함
-        // this[int index] : 인덱서 선언. this 는 현재 클래스의 인스턴스를 의미함. int index 는 index에 정수를 넣어 배열처럼 사용 가능하게 해줌
-        // items[index] : 람다식으로 표현한 읽기 전용 인덱서. items는 new Item[100]으로 크기 100의 배열을 할당받은 상태이다. 입력한 index에 해당하는 배열의 요소를 반환함
+        // this[int index] : 인덱서 선언. this 는 현재 클래스의 인스턴스를 의미함. int index 는 정수형 매개변수 index를 [ ] 안에 받음.
+        // items[index] : 람다식으로 표현한 읽기 전용 인덱서. items[index]는 private Item[] items = new Item[100]으로 크기 100의 배열을 할당받은 상태이다. 입력한 index에 해당하는 배열의 요소를 반환함
+        // 위 기능으로 Item item = inventory[i]; 같은 코드로 ItemList 의 특정 위치에 있는 배열에 접근 가능함
+
+        // 요약
+        // 1. 인덱서 선언으로 private Item[] items 에 접근 가능하게 해줌 + 어디서나 [ ] 를 통해 인덱서 호출 가능
+        // 2. 인덱서를 호출받았을 경우 index에 정수형으로 값이 저장됨 (예시로 inventory[i]일 경우 this=inventory int index = i)
+        // 3. 람다식 표기법 => items[index] 로 인덱서 호출 시 items 의 index 번째 배열에 접근하여 값을 반환함
+
 
         public bool Contains(Item target)
         // bool : Contains 메서드가 true나 false를 반환하도록 함
